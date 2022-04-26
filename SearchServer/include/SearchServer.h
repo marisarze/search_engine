@@ -2,8 +2,8 @@
 // Created by marisarze on 4/7/2022.
 //
 
-#ifndef SEARCH_PROJECT_CONVERTER_H
-#define SEARCH_PROJECT_CONVERTER_H
+#ifndef SEARCH_PROJECT_SEARCHSERVER_H
+#define SEARCH_PROJECT_SEARCHSERVER_H
 
 #include <vector>
 #include <iostream>
@@ -16,6 +16,7 @@ struct RelativeIndex{
         return (doc_id == other.doc_id && rank == other.rank);
     }
 };
+
 class SearchServer {
 public:
 /**
@@ -24,7 +25,7 @@ InvertedIndex,
 * чтобы SearchServer мог узнать частоту слов встречаемых в
 запросе
 */
-    SearchServer(InvertedIndex& idx) : _index(idx){ };
+    SearchServer(InvertedIndex& idx);
 /**
 * Метод обработки поисковых запросов
 * @param queries_input поисковые запросы взятые из файла
@@ -32,12 +33,11 @@ requests.json
 * @return возвращает отсортированный список релевантных ответов для
 заданных запросов
 */
-    std::vector<std::vector<RelativeIndex>> search(const
-                                                   std::vector<std::string>& queries_input);
+    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
 private:
-    InvertedIndex _index;
+    InvertedIndex index;
 };
 
-#endif //SEARCH_PROJECT_CONVERTER_H
+#endif //SEARCH_PROJECT_SEARCHSERVER_H
 
 
