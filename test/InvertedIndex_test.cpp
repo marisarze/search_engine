@@ -7,8 +7,8 @@
 #include "gtest/gtest.h"
 
 void TestInvertedIndexFunctionality(
-        const vector<std::string>& docs,
-        const vector<std::string>& requests,
+        const std::vector<std::string>& docs,
+        const std::vector<std::string>& requests,
         const std::vector<std::vector<Entry>>& expected
 ) {
     std::vector<std::vector<Entry>> result;

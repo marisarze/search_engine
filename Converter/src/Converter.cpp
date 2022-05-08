@@ -1,61 +1,91 @@
 #include <vector>
-#include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
-#include <sstream>
 #include <thread>
-#include <mutex>
-#include <algorithm>
 #include <string>
 #include "Converter.h"
 
+
 using json = nlohmann::json;
 
-std::string ConverterJSON::readFile(std::string path){
-    std::ifstream file;
-    file.open(path);
-    if (!file){
-        std::cout << "No config file" << std::endl;
-        // raise no file error or can't open file error
-    } else {
-        std::string raw;
-        while(true){
-            std::string temp;
-            file >> temp;
-            raw += temp;
-            if (file.eof()) break;
-            raw += ' ';
-        }
-        file.close();
-        return raw;
-    };
+std::string ConverterJSON::read_open_file(std::ifstream &file){
+    std::string raw;
+    while(true){
+        std::string temp;
+        file >> temp;
+        raw += temp;
+        if (file.eof()) break;
+        raw += ' ';
+    }
+    return raw;
 };
 
-ConverterJSON::ConverterJSON(std::string inFolder /*=""*/): folder(inFolder){};
+void ConverterJSON::CheckConfigValidity(){
+    std::ifstream config_file;
+    config_file.open(folder+"/config.json");
+    if (!config_file){
+        throw "Config file is missing";
+    }
+    std::string raw = read_open_file(config_file);
+    auto parsedJSON = json::parse(raw);
+    if(parsedJSON.count("config")==0){
+        throw "Config file is empty";
+    }
+    config_file.close();
+}
+
+ConverterJSON::ConverterJSON(std::string inFolder): folder(inFolder){};
+
+void ConverterJSON::ShowConfigInfo(){
+    std::ifstream config_file;
+    config_file.open(folder+"/config.json");
+    std::string raw = read_open_file(config_file);
+    auto parsedJSON = json::parse(raw);
+    auto config_part = parsedJSON["config"];
+    std::string info = "";
+    if (config_part.count("name")){
+        info += "search engine name: " + config_part["name"] + '\n';
+    }
+    if (config_part.count("version")){
+        info += "search engine version: " + config_part["version"] + '\n';
+    }
+    std::cout << info;
+};
 
 std::vector <std::string> ConverterJSON::GetTextDocuments(){
-    std::string raw = readFile(folder+"/config.json");
+    std::ifstream file;
+    file.open(folder+"/config.json");
+    if (!file){
+        throw "Config file is missing";
+    }
+    std::string raw = read_open_file(file);
     auto parsedJSON = json::parse(raw);
     auto docsJSON = parsedJSON["files"];
     std::vector <std::string> target;
     for (auto it = docsJSON.begin();it!=docsJSON.end(); it++){
         std::string docDirectory = it.value();
-        std::string raw = readFile(docDirectory);
+        std::ifstream doc_file(docDirectory);
+        if (!doc_file){
+            std::cerr << "Resource file is missing: " + docDirectory << std::endl;
+        }
+        std::string raw = read_open_file(doc_file);
         target.push_back(raw);
     }
     return target;
 }
 
-
 int ConverterJSON::GetResponsesLimit(){
-    std::string raw = readFile(folder+"/config.json");
+    std::ifstream config_file;
+    config_file.open(folder+"/config.json");
+    std::string raw = read_open_file(config_file);
     auto parsedJSON = json::parse(raw);
     return parsedJSON["config"]["max_responses"];
 }
 
-
 std::vector <std::string> ConverterJSON::GetRequests(){
-    std::string raw = readFile(folder+"/requests.json");
+    std::ifstream request_file;
+    request_file.open(folder+"/config.json");
+    std::string raw = read_open_file(request_file);
     auto parsedJSON = json::parse(raw);
     auto requestsJSON = parsedJSON["requests"];
     std::vector <std::string> target;

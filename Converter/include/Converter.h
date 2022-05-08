@@ -7,19 +7,21 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 class ConverterJSON {
 private:
     std::string folder = "";
-    std::string readFile(std::string path);
+    std::string read_open_file(std::ifstream &file);
 
 public:
-    ConverterJSON() = default;
     ConverterJSON(std::string inFolder="");
     std::vector<std::string> GetTextDocuments();
     int GetResponsesLimit();
     std::vector<std::string> GetRequests();
     void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
+    void ShowConfigInfo();
+    void CheckConfigValidity();
 };
 
 #endif //SEARCH_PROJECT_CONVERTER_H
