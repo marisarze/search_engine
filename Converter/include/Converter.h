@@ -21,7 +21,7 @@ public:
     std::vector<std::string> GetRequests();
     void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
     void ShowConfigInfo();
-    void CheckConfigValidity();
+    void ValidateConfigFile();
 };
 
 #endif //SEARCH_PROJECT_CONVERTER_H

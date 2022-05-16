@@ -45,12 +45,12 @@ const std::vector<std::string> docs = {
         "milk milk milk milk milk water water water water water",
         "Americano Cappuccino"
 };
-const std::vector<std::string> requests = {"milk", "water", "cappuchino"};
+const std::vector<std::string> requests = {"milk", "water", "cappuccino"};
 const std::vector<std::vector<Entry>> expected = {
         {
                 {0, 4}, {1, 1}, {2, 5}
         }, {
-                {0, 2}, {1, 2}, {2, 5}
+                {0, 3}, {1, 2}, {2, 5}
         }, {
                 {3, 1}
         }
@@ -65,9 +65,8 @@ const std::vector<std::string> docs = {
 };
 const std::vector<std::string> requests = {"m", "statement"};
 const std::vector<std::vector<Entry>> expected = {
+        {},
         {
-                {}
-        }, {
                 {1, 1}
         }
 };

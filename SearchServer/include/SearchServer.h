@@ -33,7 +33,7 @@ requests.json
 * @return возвращает отсортированный список релевантных ответов для
 заданных запросов
 */
-    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input);
+    std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input, int top_limit=0);
 private:
     InvertedIndex index;
 };

@@ -20,7 +20,7 @@ std::string ConverterJSON::read_open_file(std::ifstream &file){
     return raw;
 };
 
-void ConverterJSON::CheckConfigValidity(){
+void ConverterJSON::ValidateConfigFile(){
     std::ifstream config_file;
     config_file.open(folder+"/config.json");
     if (!config_file){
@@ -44,10 +44,10 @@ void ConverterJSON::ShowConfigInfo(){
     auto config_part = parsedJSON["config"];
     std::string info = "";
     if (config_part.count("name")){
-        info += "search engine name: " + config_part["name"] + '\n';
+        info = info + "search engine name: " + config_part["name"].get<std::string>() + '\n';
     }
     if (config_part.count("version")){
-        info += "search engine version: " + config_part["version"] + '\n';
+        info = info + "search engine version: " + config_part["version"].get<std::string>() + '\n';
     }
     std::cout << info;
 };
@@ -67,6 +67,7 @@ std::vector <std::string> ConverterJSON::GetTextDocuments(){
         std::ifstream doc_file(docDirectory);
         if (!doc_file){
             std::cerr << "Resource file is missing: " + docDirectory << std::endl;
+            continue;
         }
         std::string raw = read_open_file(doc_file);
         target.push_back(raw);
