@@ -9,8 +9,16 @@ FetchContent_Declare(
         googletest
         URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
 )
+
+FetchContent_Declare(
+        gflags
+        URL https://github.com/gflags/gflags/archive/refs/tags/v2.2.2.zip
+        GIT_TAG v2.2.2
+)
+
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+FetchContent_MakeAvailable(gflags)
 enable_testing()
 
 add_subdirectory(Converter)
@@ -20,7 +28,7 @@ add_subdirectory(test)
 #add_executable(search_project main.cpp test/Converter_test.cpp test/InvertedIndex_test.cpp test/SearchServer_test.cpp test/main.cpp)
 add_executable(search_project main.cpp)
 
-target_link_libraries(search_project Converter InvertedIndex SearchServer)
+target_link_libraries(search_project Converter InvertedIndex SearchServer gflags)
 
 
 
