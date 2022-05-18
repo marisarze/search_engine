@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <thread>
 #include <string>
+#include <stdexcept>
 #include "Converter.h"
 
 
@@ -22,14 +23,14 @@ std::string ConverterJSON::read_open_file(std::ifstream &file){
 
 void ConverterJSON::ValidateConfigFile(){
     std::ifstream config_file;
-    config_file.open(folder+"/config.json");
+    config_file.open(config_path);
     if (!config_file){
-        throw "Config file is missing";
+        throw std::runtime_error("Config file is missing");
     }
     std::string raw = read_open_file(config_file);
     auto parsedJSON = json::parse(raw);
     if(parsedJSON.count("config")==0){
-        throw "Config file is empty";
+        throw std::runtime_error("Config file is empty");
     }
     config_file.close();
 }
@@ -38,7 +39,7 @@ ConverterJSON::ConverterJSON(std::string inFolder): folder(inFolder){};
 
 void ConverterJSON::ShowConfigInfo(){
     std::ifstream config_file;
-    config_file.open(folder+"/config.json");
+    config_file.open(config_path);
     std::string raw = read_open_file(config_file);
     auto parsedJSON = json::parse(raw);
     auto config_part = parsedJSON["config"];
@@ -54,10 +55,7 @@ void ConverterJSON::ShowConfigInfo(){
 
 std::vector <std::string> ConverterJSON::GetTextDocuments(){
     std::ifstream file;
-    file.open(folder+"/config.json");
-    if (!file){
-        throw "Config file is missing";
-    }
+    file.open(config_path);
     std::string raw = read_open_file(file);
     auto parsedJSON = json::parse(raw);
     auto docsJSON = parsedJSON["files"];
@@ -77,7 +75,7 @@ std::vector <std::string> ConverterJSON::GetTextDocuments(){
 
 int ConverterJSON::GetResponsesLimit(){
     std::ifstream config_file;
-    config_file.open(folder+"/config.json");
+    config_file.open(config_path);
     std::string raw = read_open_file(config_file);
     auto parsedJSON = json::parse(raw);
     return parsedJSON["config"]["max_responses"];
@@ -85,7 +83,7 @@ int ConverterJSON::GetResponsesLimit(){
 
 std::vector <std::string> ConverterJSON::GetRequests(){
     std::ifstream request_file;
-    request_file.open(folder+"/config.json");
+    request_file.open(config_path);
     std::string raw = read_open_file(request_file);
     auto parsedJSON = json::parse(raw);
     auto requestsJSON = parsedJSON["requests"];
@@ -115,7 +113,7 @@ void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> 
         }
         answersJSON[request_key] = answerEntry;
     }
-    std::ofstream file(folder+"/answers.json");
+    std::ofstream file(answers_path);
     file << answersJSON.dump(4);
     file.close();
 }
