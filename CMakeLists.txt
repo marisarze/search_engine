@@ -11,24 +11,23 @@ FetchContent_Declare(
 )
 
 FetchContent_Declare(
-        gflags
-        URL https://github.com/gflags/gflags/archive/refs/tags/v2.2.2.zip
-        GIT_TAG v2.2.2
+        cli11
+        GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+        GIT_TAG        v2.2.0
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-FetchContent_MakeAvailable(gflags)
+FetchContent_MakeAvailable(cli11)
 enable_testing()
 
 add_subdirectory(Converter)
 add_subdirectory(InvertedIndex)
 add_subdirectory(SearchServer)
 add_subdirectory(test)
-#add_executable(search_project main.cpp test/Converter_test.cpp test/InvertedIndex_test.cpp test/SearchServer_test.cpp test/main.cpp)
 add_executable(search_project main.cpp)
 
-target_link_libraries(search_project Converter InvertedIndex SearchServer gflags)
+target_link_libraries(search_project Converter InvertedIndex SearchServer CLI11::CLI11)
 
 
 
