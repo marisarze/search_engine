@@ -35,7 +35,8 @@ void ConverterJSON::ValidateConfigFile(){
     config_file.close();
 }
 
-ConverterJSON::ConverterJSON(std::string inFolder): folder(inFolder){};
+ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path): 
+    config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
 
 void ConverterJSON::ShowConfigInfo(){
     std::ifstream config_file;
@@ -83,7 +84,7 @@ int ConverterJSON::GetResponsesLimit(){
 
 std::vector <std::string> ConverterJSON::GetRequests(){
     std::ifstream request_file;
-    request_file.open(config_path);
+    request_file.open(requests_path);
     std::string raw = read_open_file(request_file);
     auto parsedJSON = json::parse(raw);
     auto requestsJSON = parsedJSON["requests"];
