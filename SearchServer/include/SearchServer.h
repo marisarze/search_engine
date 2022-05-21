@@ -36,7 +36,7 @@ requests.json
     std::vector<std::vector<RelativeIndex>> search(const std::vector<std::string>& queries_input, int top_limit=0);
 private:
     std::vector <std::string> GetUniqueWords(std::string input);
-    InvertedIndex index;
+    InvertedIndex &index;
 };
 
 #endif //SEARCH_PROJECT_SEARCHSERVER_H

@@ -31,7 +31,6 @@ std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector 
     std::vector <std::vector<RelativeIndex>> result;
 
     for (int i=0;i<queries_input.size();i++){
-        std::string word;
         std::vector <Entry> abs_relevance = {};
         auto unique = GetUniqueWords(queries_input[i]);
         for (auto &word: unique){

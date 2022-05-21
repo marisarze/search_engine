@@ -50,6 +50,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector <std::string> input_docs){
     for (int i=0;i<threads.size(); i++){
         threads[i].join();
     }
+    docs = input_docs;
 };
 
 std::vector <Entry> InvertedIndex::GetWordCount (const std::string& word){
