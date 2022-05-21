@@ -7,21 +7,34 @@
 #include "CLI/CLI.hpp"
 
 int main(int argc, char** argv) {
-    CLI::App app{"App description"};
+    try {
+        CLI::App app{"App description"};
 
-    std::string config_file = "./config.txt";
-    app.add_option("--config,-c", config_file, "Configuration file path");
+        std::string config_path = "./config.json";
+        app.add_option("--config,-c", config_path, "Configuration file path");
 
-    std::string output_file = "./answers.txt";
-    app.add_option("--output,-o", output_file, "Output path for query response file");
+        std::string request_path = "./requests.json";
+        app.add_option("--request,-r", request_path, "Path for request file");
+
+        std::string output_path = "./answers.json";
+        app.add_option("--output,-o", output_path, "Output path for query response file");
 
 
-    CLI11_PARSE(app, argc, argv);
+        CLI11_PARSE(app, argc, argv);
 
-    ConverterJSON converter(config_file);
-    converter.ValidateConfigFile();
-    converter.ShowConfigInfo();
-    InvertedIndex index;
-    index.UpdateDocumentBase(converter.GetTextDocuments());
-    return 0;
+        ConverterJSON converter(config_path, request_path, output_path);
+        converter.ValidateConfigFile();
+        converter.ShowConfigInfo();
+        InvertedIndex index;
+        index.UpdateDocumentBase(converter.GetTextDocuments());
+        SearchServer server(index);
+        auto answers = server.search(converter.GetRequests());
+        converter.putAnswers(answers);
+        return 0;
+    }
+    catch (const std::exception& e){
+        std::cerr << e.what();
+        return 1;
+    }
+
 }

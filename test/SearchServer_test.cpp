@@ -27,7 +27,7 @@ idx.UpdateDocumentBase(docs);
 
 SearchServer srv(idx);
 
-std::vector<std::vector<RelativeIndex>> result = srv.search(request, 5);
+std::vector<std::vector<RelativeIndex>> result = srv.search(request);
 
 ASSERT_EQ(result, expected);
 }

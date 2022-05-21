@@ -8,5 +8,5 @@ set(JSON_BuildTests OFF CACHE INTERNAL "")
 
 
 add_library(Converter ${SOURCES})
-target_include_directories (Converter PUBLIC include)
-target_link_libraries(Converter PRIVATE nlohmann_json::nlohmann_json)
+target_include_directories (Converter PUBLIC include ${PROJECT_SOURCE_DIR}/SearchServer)
+target_link_libraries(Converter PRIVATE nlohmann_json::nlohmann_json SearchServer)

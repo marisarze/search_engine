@@ -4,11 +4,24 @@
 #include <mutex>
 #include <algorithm>
 #include <stdexcept>
+#include <map>
 #include "SearchServer.h"
 #include "InvertedIndex.h"
 
 
 SearchServer::SearchServer(InvertedIndex& idx): index(idx){};
+
+std::vector <std::string> SearchServer::GetUniqueWords(std::string input){
+    std::vector <std::string> unique;
+    std::string word;
+    std::stringstream ss(input);
+    while (ss >> word){
+        if (std::find(unique.begin(), unique.end(), word)==unique.end()){
+            unique.push_back(word);
+        }
+    }
+    return unique;
+};
 
 std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector <std::string>& queries_input, int top_limit){
     if (top_limit<0){
@@ -20,8 +33,8 @@ std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector 
     for (int i=0;i<queries_input.size();i++){
         std::string word;
         std::vector <Entry> abs_relevance = {};
-        std::stringstream ss(queries_input[i]);
-        while (ss >> word){
+        auto unique = GetUniqueWords(queries_input[i]);
+        for (auto &word: unique){
             std::transform(word.begin(), word.end(), word.begin(), ::tolower);
             auto word_count = index.GetWordCount(word);
             for (int j=0;j<word_count.size();j++){

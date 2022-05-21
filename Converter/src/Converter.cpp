@@ -5,7 +5,7 @@
 #include <string>
 #include <stdexcept>
 #include "Converter.h"
-
+#include "SearchServer.h"
 
 using json = nlohmann::json;
 
@@ -25,7 +25,8 @@ void ConverterJSON::ValidateConfigFile(){
     std::ifstream config_file;
     config_file.open(config_path);
     if (!config_file){
-        throw std::runtime_error("Config file is missing");
+        std::string error_message = "Config file with path " + config_path + " is missing";
+        throw std::runtime_error(error_message);
     }
     std::string raw = read_open_file(config_file);
     auto parsedJSON = json::parse(raw);
@@ -35,7 +36,7 @@ void ConverterJSON::ValidateConfigFile(){
     config_file.close();
 }
 
-ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path): 
+ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path):
     config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
 
 void ConverterJSON::ShowConfigInfo(){
@@ -95,7 +96,7 @@ std::vector <std::string> ConverterJSON::GetRequests(){
     return target;
 };
 
-void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> answers){
+void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers){
     json answersJSON = {{"answers", {}}};
     for (int request_id=0;request_id<answers.size();request_id++){
         std::string request_key = "request" + std::to_string(request_id+1);
@@ -105,10 +106,10 @@ void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> 
         else {
             answerEntry["result"]="true";
             answerEntry["relevance"] = json::array();
-            for (int doc_id=0;doc_id<answers[request_id].size();doc_id++){
+            for (int i=0;i<answers[request_id].size();i++){
                 json pair = {};
-                pair["docid"] = answers[request_id][doc_id].first;
-                pair["rank"] = answers[request_id][doc_id].second;
+                pair["docid"] = answers[request_id][i].doc_id;
+                pair["rank"] = answers[request_id][i].rank;
                 answerEntry["relevance"].insert(answerEntry["relevance"].end(), pair);
             }
         }
@@ -118,3 +119,22 @@ void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> 
     file << answersJSON.dump(4);
     file.close();
 }
+
+std::vector <std::vector<RelativeIndex>> ConverterJSON::to_relative_index(std::vector <std::vector<std::pair<int, float>>> input){
+    std::vector <std::vector<RelativeIndex>> result;
+    for (int i=0;i<input.size();i++){
+        std::vector<RelativeIndex> relevances;
+        for (int j=0;j<input[i].size();j++){
+            RelativeIndex item;
+            item.doc_id = input[i][j].first;
+            item.rank = input[i][j].second;
+            relevances.push_back(item);
+        }
+        result.push_back(relevances);
+    };
+    return result;
+}
+
+void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> answers){
+    putAnswers(to_relative_index(answers));
+};
