@@ -85,7 +85,7 @@ TEST_F(TestCaseSearchServer, TestTop5) {
 }
 
 
-TEST_F(TestCaseSearchServer, TestRepeatedRequestWordsDontMatter) {
+TEST_F(TestCaseSearchServer, TestRepeatedWordsDontMatter) {
 
     const std::vector<std::string> request_one = {"moscow is the capital of russia"};
     const std::vector<std::string> request_two = {"moscow moscow is the capital of russia"};

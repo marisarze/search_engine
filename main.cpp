@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
         InvertedIndex index;
         index.UpdateDocumentBase(converter.GetTextDocuments());
         SearchServer server(index);
-        auto answers = server.search(converter.GetRequests());
+        auto answers = server.search(converter.GetRequests(), converter.GetResponsesLimit());
         converter.putAnswers(answers);
         return 0;
     }
