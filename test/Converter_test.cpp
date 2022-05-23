@@ -130,8 +130,8 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
                       {{"docid", 2}, {"rank", 0.989}},
                       {{"docid", 1}, {"rank", 0.897}},
                       {{"docid", 0}, {"rank", 0.750}},
-                      {{"docid", 2}, {"rank", 0.670}},
-                      {{"docid", 2}, {"rank", 0.561}}
+                      {{"docid", 3}, {"rank", 0.670}},
+                      {{"docid", 4}, {"rank", 0.561}}
                       })
                 }}
             },

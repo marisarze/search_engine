@@ -104,7 +104,14 @@ std::vector <std::string> ConverterJSON::GetRequests(){
 void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers){
     json answersJSON = {{"answers", {}}};
     for (int request_id=0;request_id<answers.size();request_id++) {
-        std::string request_key = "request" + std::to_string(request_id + 1);
+        std::string prefix;
+        if (request_id <99 && request_id>8)
+            prefix = "request0";
+        else if (request_id<=8)
+            prefix = "request00";
+        else
+            prefix = "request00";
+        std::string request_key = prefix + std::to_string(request_id + 1);
         json answerEntry = {};
         if (answers[request_id].size() == 0)
             answerEntry["result"] = "false";
@@ -122,7 +129,7 @@ void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers)
                 answerEntry["relevance"].insert(answerEntry["relevance"].end(), pair);
             }
         }
-        answersJSON[request_key] = answerEntry;
+        answersJSON["answers"][request_key] = answerEntry;
     }
     std::ofstream file(answers_path);
     file << answersJSON.dump(4);
