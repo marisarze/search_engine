@@ -12,11 +12,11 @@ using json = nlohmann::json;
 std::string ConverterJSON::read_open_file(std::ifstream &file){
     std::string raw;
     while(true){
-        std::string temp;
-        file >> temp;
+        char temp = file.get();
+        if (temp=='\377'){
+            break;
+        }
         raw += temp;
-        if (file.eof()) break;
-        raw += ' ';
     }
     return raw;
 };
@@ -86,7 +86,12 @@ int ConverterJSON::GetResponsesLimit(){
 std::vector <std::string> ConverterJSON::GetRequests(){
     std::ifstream request_file;
     request_file.open(requests_path);
-    std::string raw = read_open_file(request_file);
+    std::string raw;
+    if (request_file.is_open()){
+        raw = read_open_file(request_file);
+    } else {
+        throw std::runtime_error("Can't open request file\n");
+    };
     auto parsedJSON = json::parse(raw);
     auto requestsJSON = parsedJSON["requests"];
     std::vector <std::string> target;
@@ -98,12 +103,16 @@ std::vector <std::string> ConverterJSON::GetRequests(){
 
 void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers){
     json answersJSON = {{"answers", {}}};
-    for (int request_id=0;request_id<answers.size();request_id++){
-        std::string request_key = "request" + std::to_string(request_id+1);
+    for (int request_id=0;request_id<answers.size();request_id++) {
+        std::string request_key = "request" + std::to_string(request_id + 1);
         json answerEntry = {};
-        if (answers[request_id].size()==0)
-            answerEntry["result"]="false";
-        else {
+        if (answers[request_id].size() == 0)
+            answerEntry["result"] = "false";
+        else if (answers[request_id].size() == 1) {
+            answerEntry["result"] = "true";
+            answerEntry["docid"] = answers[request_id][0].doc_id;
+            answerEntry["rank"] = answers[request_id][0].rank;
+        } else {
             answerEntry["result"]="true";
             answerEntry["relevance"] = json::array();
             for (int i=0;i<answers[request_id].size();i++){

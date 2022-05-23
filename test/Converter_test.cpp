@@ -6,6 +6,7 @@
 #include <filesystem>
 #include "gtest/gtest.h"
 #include "Converter.h"
+#include "InvertedIndex.h"
 
 using json = nlohmann::json;
 
@@ -82,12 +83,19 @@ TEST_F(TestCaseConverter, TestGetResponsesLimit){
 
 
 TEST(TestCaseConverterSimple, TestGetRequests){
-    std::fstream requests_file("./request.json", std::ios_base::out);
-    auto requests_json = json::array();
-    requests_json.insert(requests_json.end(), "They came for him one winter's night");
-    requests_json.insert(requests_json.end(), "Arrested, he was bound");
-    requests_json.insert(requests_json.end(), "They said there\'d been a robbery");
-    requests_json.insert(requests_json.end(), "His pistol had been found");
+    std::string config_path = "./config.json";
+    std::string requests_path = "./requests.json";
+    std::string answers_path = "./answers.json";
+    std::fstream requests_file(requests_path, std::ios_base::out);
+    auto requests_json = json::object({{"requests", json::array()}});
+    std::vector <std::string> expected = {"They came for him one winter's night",
+                                        "Arrested, he was bound",
+                                        "They said there\'d been a robbery",
+                                        "His pistol had been found"};
+    for (auto &elem : expected){
+        requests_json["requests"].insert(requests_json["requests"].end(), elem);
+    }
+
     if (requests_file.is_open()){
         requests_file << requests_json.dump(4);
         requests_file.close();
@@ -95,6 +103,70 @@ TEST(TestCaseConverterSimple, TestGetRequests){
         requests_file.close();
         throw std::runtime_error("Can't create fixture requests file: ./requests.json");
     }
+    auto converter = ConverterJSON(config_path, requests_path, answers_path);
+    auto result = converter.GetRequests();
+    if (!std::filesystem::remove_all("./requests.json")){
+        throw std::runtime_error("Error deleting fixture folder \"requests.json\"");
+    }
+    ASSERT_EQ(result, expected);
 }
+
+
+TEST(TestCaseConverterSimple, TestPutAnswersPairs){
+
+    std::vector <std::vector <std::pair <int, float>>> input({{
+        std::pair <int, float>({2,0.989}),
+        std::pair <int, float>({1,0.897}),
+        std::pair <int, float>({0,0.750}),
+        std::pair <int, float>({3,0.670}),
+        std::pair <int, float>({4,0.561})},{
+        std::pair <int, float>({10,0.769})
+    },{}});
+    json expected = json::object({{
+        "answers", {
+            {"request001",{
+                {"result", "true"},
+                {"relevance", json::array({
+                      {{"docid", 2}, {"rank", 0.989}},
+                      {{"docid", 1}, {"rank", 0.897}},
+                      {{"docid", 0}, {"rank", 0.750}},
+                      {{"docid", 2}, {"rank", 0.670}},
+                      {{"docid", 2}, {"rank", 0.561}}
+                      })
+                }}
+            },
+            {"request002",{
+                {"result", "true"},
+                {"docid", 10},
+                {"rank", 0.769}}
+            },
+            {"request003",{
+                {"result", "false"}
+            }}
+            }
+        }});
+
+    std::string config_path = "./config.json";
+    std::string requests_path = "./requests.json";
+    std::string answers_path = "./answers.json";
+    ConverterJSON converter(config_path, requests_path, answers_path);
+    converter.putAnswers(input);
+    std::fstream answers_file(answers_path, std::ios_base::in);
+    json result;
+    if (answers_file.is_open()){
+        result = json::parse(answers_file);
+        answers_file.close();
+    } else {
+        answers_file.close();
+        throw std::runtime_error("Can't open answers file: ./answers.json");
+    }
+    if (!std::filesystem::remove_all("./answers.json")){
+        throw std::runtime_error("Error deleting \"answers.json\"");
+    }
+    ASSERT_EQ(result, expected);
+}
+
+
+
 
 
