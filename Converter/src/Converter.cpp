@@ -9,41 +9,48 @@
 
 using json = nlohmann::json;
 
+ConverterJSON::ConverterJSON(){};
+
+ConverterJSON::ConverterJSON(std::string in_config_path):
+        config_path(in_config_path){};
+
+ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path):
+        config_path(in_config_path),requests_path(in_requests_path){};
+
+ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path):
+    config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
+
 std::string ConverterJSON::read_open_file(std::ifstream &file){
+    file.seekg(0, std::ios::beg);
     std::string raw;
     while(true){
         char temp = file.get();
-        if (temp=='\377'){
-            break;
-        }
+        if (file.eof()) break;
         raw += temp;
     }
     return raw;
 };
 
 void ConverterJSON::ValidateConfigFile(){
-    std::ifstream config_file;
-    config_file.open(config_path);
-    if (!config_file){
+    std::ifstream config_file(config_path);
+    json parsedJSON;
+    if (!config_file.is_open()){
         std::string error_message = "Config file with path " + config_path + " is missing";
         throw std::runtime_error(error_message);
+    } else {
+        parsedJSON = json::parse(config_file);
+        config_file.close();
     }
-    std::string raw = read_open_file(config_file);
-    auto parsedJSON = json::parse(raw);
     if(parsedJSON.count("config")==0){
         throw std::runtime_error("Config file is empty");
     }
-    config_file.close();
 }
 
-ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path):
-    config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
 
 void ConverterJSON::ShowConfigInfo(){
-    std::ifstream config_file;
-    config_file.open(config_path);
-    std::string raw = read_open_file(config_file);
-    auto parsedJSON = json::parse(raw);
+    std::ifstream config_file(config_path);
+    json parsedJSON = json::parse(config_file);
+    config_file.close();
     auto config_part = parsedJSON["config"];
     std::string info = "";
     if (config_part.count("name")){
@@ -56,10 +63,9 @@ void ConverterJSON::ShowConfigInfo(){
 };
 
 std::vector <std::string> ConverterJSON::GetTextDocuments(){
-    std::ifstream file;
-    file.open(config_path);
-    std::string raw = read_open_file(file);
-    auto parsedJSON = json::parse(raw);
+    std::ifstream config_file(config_path);
+    json parsedJSON = json::parse(config_file);
+    config_file.close();
     auto docsJSON = parsedJSON["files"];
     std::vector <std::string> target;
     for (auto it = docsJSON.begin();it!=docsJSON.end(); it++){
@@ -69,30 +75,23 @@ std::vector <std::string> ConverterJSON::GetTextDocuments(){
             std::cerr << "Resource file is missing: " + docDirectory << std::endl;
             continue;
         }
-        std::string raw = read_open_file(doc_file);
-        target.push_back(raw);
+        std::string content = read_open_file(doc_file);
+        target.push_back(content);
     }
     return target;
 }
 
 int ConverterJSON::GetResponsesLimit(){
-    std::ifstream config_file;
-    config_file.open(config_path);
-    std::string raw = read_open_file(config_file);
-    auto parsedJSON = json::parse(raw);
+    std::ifstream config_file(config_path);
+    json parsedJSON = json::parse(config_file);
+    config_file.close();
     return parsedJSON["config"]["max_responses"];
 }
 
 std::vector <std::string> ConverterJSON::GetRequests(){
-    std::ifstream request_file;
-    request_file.open(requests_path);
-    std::string raw;
-    if (request_file.is_open()){
-        raw = read_open_file(request_file);
-    } else {
-        throw std::runtime_error("Can't open request file\n");
-    };
-    auto parsedJSON = json::parse(raw);
+    std::ifstream requests_file(requests_path);
+    json parsedJSON = json::parse(requests_file);
+    requests_file.close();
     auto requestsJSON = parsedJSON["requests"];
     std::vector <std::string> target;
     for (auto it = requestsJSON.begin();it!=requestsJSON.end(); it++){

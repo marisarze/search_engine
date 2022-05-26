@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
 
         CLI11_PARSE(app, argc, argv);
 
+
         ConverterJSON converter(config_path, request_path, output_path);
         converter.ValidateConfigFile();
         converter.ShowConfigInfo();

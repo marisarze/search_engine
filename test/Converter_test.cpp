@@ -12,7 +12,7 @@ using json = nlohmann::json;
 
 class TestCaseConverter: public::testing::Test {
 protected:
-    int n = 888;
+    int n = 17;
     std::string config_path = "config.json";
     json config_json = json::object({
         {"config", {{"name", "FastestSearchEngine"},
@@ -29,7 +29,7 @@ protected:
             std::fstream file(name, std::ios_base::out);
             if (file.is_open()){
                 file << "Five little ducks went out one day\n"
-                        "Over the hill and far away..."<<std::endl;
+                        "Over the hill and far away...\n";
                 file << "Order number is "+std::to_string(i);
                 file.close();
                 config_json["files"].insert(config_json["files"].end(), name);
@@ -81,6 +81,17 @@ TEST_F(TestCaseConverter, TestGetResponsesLimit){
     ASSERT_EQ(result, expected);
 };
 
+TEST_F(TestCaseConverter, TestGetTextDocuments){
+    std::string requests_path = "./requests.json";
+    std::string answers_path = "./answers.json";
+    auto converter = ConverterJSON(config_path);
+    std::vector <std::string> result = converter.GetTextDocuments();
+    ASSERT_EQ(result.size(), 17);
+    ASSERT_EQ(result[16], "Five little ducks went out one day\n"
+                           "Over the hill and far away...\n"
+                           "Order number is 16");
+};
+
 
 TEST(TestCaseConverterSimple, TestGetRequests){
     std::string config_path = "./config.json";
@@ -113,7 +124,6 @@ TEST(TestCaseConverterSimple, TestGetRequests){
 
 
 TEST(TestCaseConverterSimple, TestPutAnswersPairs){
-
     std::vector <std::vector <std::pair <int, float>>> input({{
         std::pair <int, float>({2,0.989}),
         std::pair <int, float>({1,0.897}),
@@ -122,23 +132,35 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
         std::pair <int, float>({4,0.561})},{
         std::pair <int, float>({10,0.769})
     },{}});
-    json expected = json::object({{
+
+    nlohmann::basic_json <
+            std::map,
+            std::vector,
+            std::string,
+            bool,
+            std::int64_t,
+            std::uint64_t,
+            float,
+            std::allocator,
+            nlohmann::adl_serializer,
+            std::vector<std::uint8_t>>
+        expected({{
         "answers", {
             {"request001",{
                 {"result", "true"},
                 {"relevance", json::array({
-                      {{"docid", 2}, {"rank", 0.989}},
-                      {{"docid", 1}, {"rank", 0.897}},
-                      {{"docid", 0}, {"rank", 0.750}},
-                      {{"docid", 3}, {"rank", 0.670}},
-                      {{"docid", 4}, {"rank", 0.561}}
+                      {{"docid", 2}, {"rank", (json::number_float_t)0.989}},
+                      {{"docid", 1}, {"rank", (json::number_float_t)0.897}},
+                      {{"docid", 0}, {"rank", (json::number_float_t)0.750}},
+                      {{"docid", 3}, {"rank", (json::number_float_t)0.670}},
+                      {{"docid", 4}, {"rank", (json::number_float_t)0.561}}
                       })
                 }}
             },
             {"request002",{
                 {"result", "true"},
                 {"docid", 10},
-                {"rank", 0.769}}
+                {"rank", (json::number_float_t)0.769}}
             },
             {"request003",{
                 {"result", "false"}
@@ -152,7 +174,17 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
     ConverterJSON converter(config_path, requests_path, answers_path);
     converter.putAnswers(input);
     std::fstream answers_file(answers_path, std::ios_base::in);
-    json result;
+    nlohmann::basic_json <
+            std::map,
+            std::vector,
+            std::string,
+            bool,
+            std::int64_t,
+            std::uint64_t,
+            float,
+            std::allocator,
+            nlohmann::adl_serializer,
+            std::vector<std::uint8_t>> result;
     if (answers_file.is_open()){
         result = json::parse(answers_file);
         answers_file.close();
@@ -163,7 +195,7 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
     if (!std::filesystem::remove_all("./answers.json")){
         throw std::runtime_error("Error deleting \"answers.json\"");
     }
-    ASSERT_EQ(result, expected);
+    ASSERT_EQ(expected, result);
 }
 
 
