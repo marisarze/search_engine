@@ -849,7 +849,7 @@ namespace {
 
 template <typename Expected, typename F>
 static constexpr bool IsMockFunctionTemplateArgumentDeducedTo(
-    const internal::MockFunction<F>&) {
+    const MockFunction<F>&) {
   return std::is_same<F, Expected>::value;
 }
 
@@ -868,14 +868,14 @@ TYPED_TEST(MockMethodMockFunctionSignatureTest,
            IsMockFunctionTemplateArgumentDeducedForRawSignature) {
   using Argument = TypeParam;
   MockFunction<Argument> foo;
-  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
+  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<Argument>(foo));
 }
 
 TYPED_TEST(MockMethodMockFunctionSignatureTest,
            IsMockFunctionTemplateArgumentDeducedForStdFunction) {
   using Argument = std::function<TypeParam>;
   MockFunction<Argument> foo;
-  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
+  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<Argument>(foo));
 }
 
 TYPED_TEST(
@@ -887,26 +887,14 @@ TYPED_TEST(
   EXPECT_TRUE((std::is_same<ForRawSignature, ForStdFunction>::value));
 }
 
-template <typename F>
-struct AlternateCallable {
-};
-
-TYPED_TEST(MockMethodMockFunctionSignatureTest,
-           IsMockFunctionTemplateArgumentDeducedForAlternateCallable) {
-  using Argument = AlternateCallable<TypeParam>;
-  MockFunction<Argument> foo;
-  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
-}
-
 TYPED_TEST(
     MockMethodMockFunctionSignatureTest,
-    IsMockFunctionCallMethodSignatureTheSameForAlternateCallable) {
-  using ForRawSignature = decltype(&MockFunction<TypeParam>::Call);
+    IsMockFunctionAsStdFunctionMethodSignatureTheSameForRawSignatureAndStdFunction) {
+  using ForRawSignature = decltype(&MockFunction<TypeParam>::AsStdFunction);
   using ForStdFunction =
-      decltype(&MockFunction<std::function<TypeParam>>::Call);
+      decltype(&MockFunction<std::function<TypeParam>>::AsStdFunction);
   EXPECT_TRUE((std::is_same<ForRawSignature, ForStdFunction>::value));
 }
-
 
 struct MockMethodSizes0 {
   MOCK_METHOD(void, func, ());
