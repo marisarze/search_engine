@@ -1,10 +1,8 @@
 #include <vector>
 #include <sstream>
 #include <thread>
-#include <mutex>
 #include <algorithm>
 #include <stdexcept>
-#include <map>
 #include "SearchServer.h"
 #include "InvertedIndex.h"
 
