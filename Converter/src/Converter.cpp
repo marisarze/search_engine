@@ -20,6 +20,29 @@ ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests
 ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path):
     config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
 
+void ConverterJSON::set_config_path(std::string in_config_path){
+    config_path = in_config_path;
+};
+
+std::string ConverterJSON::get_config_path(){
+    return config_path;
+};
+
+void ConverterJSON::set_requests_path(std::string in_requests_path){
+    requests_path = in_requests_path;
+};
+
+std::string ConverterJSON::get_requests_path(){
+    return requests_path;
+};
+
+void ConverterJSON::set_answers_path(std::string in_answers_path){
+    answers_path = in_answers_path;
+};
+std::string ConverterJSON::get_answers_path(){
+    return answers_path;
+};
+
 std::string ConverterJSON::read_open_file(std::ifstream &file){
     file.seekg(0, std::ios::beg);
     std::string raw;

@@ -122,17 +122,8 @@ TEST(TestCaseConverterSimple, TestGetRequests){
     ASSERT_EQ(result, expected);
 }
 
-
-TEST(TestCaseConverterSimple, TestPutAnswersPairs){
-    std::vector <std::vector <std::pair <int, float>>> input({{
-        std::pair <int, float>({2,0.989}),
-        std::pair <int, float>({1,0.897}),
-        std::pair <int, float>({0,0.750}),
-        std::pair <int, float>({3,0.670}),
-        std::pair <int, float>({4,0.561})},{
-        std::pair <int, float>({10,0.769})
-    },{}});
-
+class TestCaseConverterAnswers: public::testing::Test {
+protected:
     nlohmann::basic_json <
             std::map,
             std::vector,
@@ -144,36 +135,30 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
             std::allocator,
             nlohmann::adl_serializer,
             std::vector<std::uint8_t>>
-        expected({{
-        "answers", {
-            {"request001",{
-                {"result", "true"},
-                {"relevance", json::array({
-                      {{"docid", 2}, {"rank", (json::number_float_t)0.989}},
-                      {{"docid", 1}, {"rank", (json::number_float_t)0.897}},
-                      {{"docid", 0}, {"rank", (json::number_float_t)0.750}},
-                      {{"docid", 3}, {"rank", (json::number_float_t)0.670}},
-                      {{"docid", 4}, {"rank", (json::number_float_t)0.561}}
-                      })
-                }}
-            },
-            {"request002",{
-                {"result", "true"},
-                {"docid", 10},
-                {"rank", (json::number_float_t)0.769}}
-            },
-            {"request003",{
-                {"result", "false"}
-            }}
-            }
-        }});
+    expected = {{"answers", {
+                {"request001",{
+                  {"result", "true"},
+                  {"relevance", json::array({
+                        {{"docid", 2}, {"rank", 0.989}},
+                        {{"docid", 1}, {"rank", 0.897}},
+                        {{"docid", 0}, {"rank", 0.750}},
+                        {{"docid", 3}, {"rank", 0.670}},
+                        {{"docid", 4}, {"rank", 0.561}}
+                    })
+                  }}
+                },
+                {"request002",{
+                      {"result", "true"},
+                      {"docid", 10},
+                      {"rank", 0.769}}
+                },
+                {"request003",
+                  {
+                    {"result", "false"}
+                  }
+                }
+                }}};
 
-    std::string config_path = "./config.json";
-    std::string requests_path = "./requests.json";
-    std::string answers_path = "./answers.json";
-    ConverterJSON converter(config_path, requests_path, answers_path);
-    converter.putAnswers(input);
-    std::fstream answers_file(answers_path, std::ios_base::in);
     nlohmann::basic_json <
             std::map,
             std::vector,
@@ -185,6 +170,29 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
             std::allocator,
             nlohmann::adl_serializer,
             std::vector<std::uint8_t>> result;
+
+    std::string config_path = "./config.json";
+    std::string requests_path = "./requests.json";
+    std::string answers_path = "./answers.json";
+    ConverterJSON converter;
+    void SetUp() override {
+        converter = ConverterJSON(config_path, requests_path, answers_path);
+    }
+};
+
+
+TEST_F(TestCaseConverterAnswers, TestPairsInput){
+    std::vector <std::vector <std::pair <int, float>>> input({{
+        std::pair <int, float>({2,0.989}),
+        std::pair <int, float>({1,0.897}),
+        std::pair <int, float>({0,0.750}),
+        std::pair <int, float>({3,0.670}),
+        std::pair <int, float>({4,0.561})},{
+        std::pair <int, float>({10,0.769})
+    },{}});
+
+    converter.putAnswers(input);
+    std::fstream answers_file(answers_path, std::ios_base::in);
     if (answers_file.is_open()){
         result = json::parse(answers_file);
         answers_file.close();
@@ -196,6 +204,49 @@ TEST(TestCaseConverterSimple, TestPutAnswersPairs){
         throw std::runtime_error("Error deleting \"answers.json\"");
     }
     ASSERT_EQ(expected, result);
+}
+
+TEST_F(TestCaseConverterAnswers, TestRelativeIndexInput){
+    std::vector <std::vector <RelativeIndex>> input({{
+        RelativeIndex({2,0.989}),
+        RelativeIndex({1,0.897}),
+        RelativeIndex({0,0.750}),
+        RelativeIndex({3,0.670}),
+        RelativeIndex({4,0.561})},{
+        RelativeIndex({10,0.769})
+        },{}});
+
+    converter.putAnswers(input);
+    std::fstream answers_file(answers_path, std::ios_base::in);
+    if (answers_file.is_open()){
+        result = json::parse(answers_file);
+        answers_file.close();
+    } else {
+        answers_file.close();
+        throw std::runtime_error("Can't open answers file: ./answers.json");
+    }
+    if (!std::filesystem::remove_all("./answers.json")){
+        throw std::runtime_error("Error deleting \"answers.json\"");
+    }
+    ASSERT_EQ(expected, result);
+}
+
+TEST(TestCaseConverterSimple, TestSettersGetters){
+    auto converter = ConverterJSON();
+    std::string expected = "path_for_config";
+    converter.set_config_path(expected);
+    auto result = converter.get_config_path();
+    EXPECT_EQ(expected, result);
+
+    expected = "path_for_requests";
+    converter.set_requests_path(expected);
+    result = converter.get_requests_path();
+    EXPECT_EQ(expected, result);
+
+    expected = "path_for_answers";
+    converter.set_answers_path(expected);
+    result = converter.get_answers_path();
+    EXPECT_EQ(expected, result);
 }
 
 
