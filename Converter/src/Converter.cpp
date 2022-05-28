@@ -11,18 +11,23 @@ using json = nlohmann::json;
 
 ConverterJSON::ConverterJSON(){};
 
+
 ConverterJSON::ConverterJSON(std::string in_config_path):
         config_path(in_config_path){};
+
 
 ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path):
         config_path(in_config_path),requests_path(in_requests_path){};
 
+
 ConverterJSON::ConverterJSON(std::string in_config_path, std::string in_requests_path, std::string in_answers_path):
     config_path(in_config_path),requests_path(in_requests_path),answers_path(in_answers_path){};
+
 
 void ConverterJSON::set_config_path(std::string in_config_path){
     config_path = in_config_path;
 };
+
 
 std::string ConverterJSON::get_config_path(){
     return config_path;
@@ -32,16 +37,21 @@ void ConverterJSON::set_requests_path(std::string in_requests_path){
     requests_path = in_requests_path;
 };
 
+
 std::string ConverterJSON::get_requests_path(){
     return requests_path;
 };
 
+
 void ConverterJSON::set_answers_path(std::string in_answers_path){
     answers_path = in_answers_path;
 };
+
+
 std::string ConverterJSON::get_answers_path(){
     return answers_path;
 };
+
 
 std::string ConverterJSON::read_open_file(std::ifstream &file){
     file.seekg(0, std::ios::beg);
@@ -53,6 +63,7 @@ std::string ConverterJSON::read_open_file(std::ifstream &file){
     }
     return raw;
 };
+
 
 void ConverterJSON::ValidateConfigFile(){
     std::ifstream config_file(config_path);
@@ -85,6 +96,7 @@ void ConverterJSON::ShowConfigInfo(){
     std::cout << info;
 };
 
+
 std::vector <std::string> ConverterJSON::GetTextDocuments(){
     std::ifstream config_file(config_path);
     json parsedJSON = json::parse(config_file);
@@ -104,12 +116,14 @@ std::vector <std::string> ConverterJSON::GetTextDocuments(){
     return target;
 }
 
+
 int ConverterJSON::GetResponsesLimit(){
     std::ifstream config_file(config_path);
     json parsedJSON = json::parse(config_file);
     config_file.close();
     return parsedJSON["config"]["max_responses"];
 }
+
 
 std::vector <std::string> ConverterJSON::GetRequests(){
     std::ifstream requests_file(requests_path);
@@ -122,6 +136,7 @@ std::vector <std::string> ConverterJSON::GetRequests(){
     }
     return target;
 };
+
 
 void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers){
     json answersJSON = {{"answers", {}}};
@@ -158,6 +173,7 @@ void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers)
     file.close();
 }
 
+
 std::vector <std::vector<RelativeIndex>> ConverterJSON::to_relative_index(std::vector <std::vector<std::pair<int, float>>> input){
     std::vector <std::vector<RelativeIndex>> result;
     for (int i=0;i<input.size();i++){
@@ -172,6 +188,7 @@ std::vector <std::vector<RelativeIndex>> ConverterJSON::to_relative_index(std::v
     };
     return result;
 }
+
 
 void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> answers){
     putAnswers(to_relative_index(answers));
