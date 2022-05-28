@@ -42,6 +42,7 @@ public:
     void ValidateConfigFile();
 };
 
+
 #endif //SEARCH_PROJECT_CONVERTER_H
 
 
