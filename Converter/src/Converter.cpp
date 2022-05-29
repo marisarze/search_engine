@@ -82,6 +82,8 @@ void ConverterJSON::validate_config_file(std::string valid_project_version){
         throw std::runtime_error("Config file should contain version.");
     }
     if(parsedJSON["config"]["version"]!=valid_project_version){
+        std::cerr << "Version of the application is " << valid_project_version << ", but got from config "
+        << parsedJSON["config"]["version"]<< std::endl;
         throw std::runtime_error("Config file has incorrect version.");
     }
 }
@@ -96,9 +98,7 @@ void ConverterJSON::show_config_info(){
     if (config_part.count("name")){
         info = info + "search engine name: " + config_part["name"].get<std::string>() + '\n';
     }
-    if (config_part.count("version")){
-        info = info + "search engine version: " + config_part["version"].get<std::string>() + '\n';
-    }
+    info = info + "search engine version: " + config_part["version"].get<std::string>() + '\n';
     std::cout << info;
 };
 

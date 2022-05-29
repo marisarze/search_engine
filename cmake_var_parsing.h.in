@@ -1,0 +1,13 @@
+//
+// Created by marisarze on 5/29/2022.
+//
+
+#ifndef SEARCH_ENGINE_CMAKE_VAR_PARSING_H_IN
+#define SEARCH_ENGINE_CMAKE_VAR_PARSING_H_IN
+
+#define PROJECT_NAME @PROJECT_NAME@
+#define PROJECT_VER  @PROJECT_VERSION@
+#define STR_(x) #x
+#define STR(x) STR_(x)
+
+#endif //SEARCH_ENGINE_CMAKE_VAR_PARSING_H_IN
