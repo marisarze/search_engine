@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include "CLI/CLI.hpp"
-#include "cmake_var_parsing_in.h"
+#include "cmake_var_parsing.h"
 
 int main(int argc, char** argv) {
     try {
@@ -23,18 +23,19 @@ int main(int argc, char** argv) {
         app.add_flag("--version,-v", version_flag, "Show a version of the application");
         CLI11_PARSE(app, argc, argv);
         if (version_flag){
-            std::cout << "The app version: " << PROJECT_VER << std::endl;
+            std::cout << "The app version: " << STR(PROJECT_VER) << std::endl;
         } else {
             ConverterJSON converter(config_path, request_path, output_path);
-            converter.validate_config_file(PROJECT_VER);
+            converter.validate_config_file(STR(PROJECT_VER));
             converter.show_config_info();
             InvertedIndex index;
             index.update_document_base(converter.get_text_documents());
             SearchServer server(index);
             auto answers = server.search(converter.get_requests(), converter.get_responses_limit());
             converter.put_answers(answers);
-            return 0;
         }
+        std::cout << "The application completed successfully." << std::endl;
+        return 0;
     }
     catch (const std::exception& e){
         std::cerr << "Error: " << e.what();
