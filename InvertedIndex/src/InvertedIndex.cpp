@@ -11,6 +11,7 @@
 
 std::mutex mtx;
 
+
 void InvertedIndex::handle_doc(std::string sentence, size_t id){
     std::stringstream ss(sentence);
     std::string word;
@@ -42,6 +43,7 @@ void InvertedIndex::handle_doc(std::string sentence, size_t id){
     }
 };
 
+
 void InvertedIndex::UpdateDocumentBase(std::vector <std::string> input_docs){
     std::vector <std::thread> threads;
     for (int i=0;i<input_docs.size(); i++){
@@ -52,6 +54,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector <std::string> input_docs){
     }
     docs = input_docs;
 };
+
 
 std::vector <Entry> InvertedIndex::GetWordCount (const std::string& word){
     std::string for_lowercase = word;

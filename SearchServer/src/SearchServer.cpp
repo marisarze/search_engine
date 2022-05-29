@@ -1,15 +1,14 @@
 #include <vector>
 #include <sstream>
 #include <thread>
-#include <mutex>
 #include <algorithm>
 #include <stdexcept>
-#include <map>
 #include "SearchServer.h"
 #include "InvertedIndex.h"
 
 
 SearchServer::SearchServer(InvertedIndex& idx): index(idx){};
+
 
 std::vector <std::string> SearchServer::GetUniqueWords(std::string input){
     std::vector <std::string> unique;
@@ -23,13 +22,13 @@ std::vector <std::string> SearchServer::GetUniqueWords(std::string input){
     return unique;
 };
 
+
 std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector <std::string>& queries_input, int top_limit){
     if (top_limit<0){
         std::string error_message = "Error. Top limit must be positive or zero, current value top_limit = " + std::to_string(top_limit);
         throw std::invalid_argument(error_message);
     }
     std::vector <std::vector<RelativeIndex>> result;
-
     for (int i=0;i<queries_input.size();i++){
         std::vector <Entry> abs_relevance = {};
         auto unique = GetUniqueWords(queries_input[i]);

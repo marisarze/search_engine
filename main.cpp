@@ -22,13 +22,14 @@ int main(int argc, char** argv) {
 
         CLI11_PARSE(app, argc, argv);
 
+
         ConverterJSON converter(config_path, request_path, output_path);
         converter.ValidateConfigFile();
         converter.ShowConfigInfo();
         InvertedIndex index;
         index.UpdateDocumentBase(converter.GetTextDocuments());
         SearchServer server(index);
-        auto answers = server.search(converter.GetRequests());
+        auto answers = server.search(converter.GetRequests(), converter.GetResponsesLimit());
         converter.putAnswers(answers);
         return 0;
     }

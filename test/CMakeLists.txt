@@ -13,7 +13,7 @@ if (NOT (TARGET gtest AND TARGET gtest_main))
 endif()
 
 add_executable(${TEST_PROJECT_NAME} main.cpp InvertedIndex_test.cpp Converter_test.cpp SearchServer_test.cpp)
-target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main Converter InvertedIndex SearchServer)
+target_link_libraries(${TEST_PROJECT_NAME} gtest gtest_main Converter InvertedIndex SearchServer nlohmann_json::nlohmann_json)
 
 add_test(${TEST_PROJECT_NAME} ${TEST_PROJECT_NAME})
 
