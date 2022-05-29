@@ -63,7 +63,7 @@ TEST_F(TestCaseConverter, TestShowConfigInfo){
     std::stringstream buffer;
     std::streambuf *sbuf = std::cout.rdbuf();
     std::cout.rdbuf(buffer.rdbuf());
-    converter.ShowConfigInfo();
+    converter.show_config_info();
     std::string result = buffer.str();
     std::cout.rdbuf(sbuf);
     std::string expected = "search engine name: FastestSearchEngine\n"
@@ -76,7 +76,7 @@ TEST_F(TestCaseConverter, TestGetResponsesLimit){
     std::string requests_path = "./requests.json";
     std::string answers_path = "./answers.json";
     auto converter = ConverterJSON(config_path, requests_path, answers_path);
-    int result = converter.GetResponsesLimit();
+    int result = converter.get_responses_limit();
     int expected = 567;
     ASSERT_EQ(result, expected);
 };
@@ -85,7 +85,7 @@ TEST_F(TestCaseConverter, TestGetTextDocuments){
     std::string requests_path = "./requests.json";
     std::string answers_path = "./answers.json";
     auto converter = ConverterJSON(config_path);
-    std::vector <std::string> result = converter.GetTextDocuments();
+    std::vector <std::string> result = converter.get_text_documents();
     ASSERT_EQ(result.size(), 17);
     ASSERT_EQ(result[16], "Five little ducks went out one day\n"
                            "Over the hill and far away...\n"
@@ -115,7 +115,7 @@ TEST(TestCaseConverterSimple, TestGetRequests){
         throw std::runtime_error("Can't create fixture requests file: ./requests.json");
     }
     auto converter = ConverterJSON(config_path, requests_path, answers_path);
-    auto result = converter.GetRequests();
+    auto result = converter.get_requests();
     if (!std::filesystem::remove_all("./requests.json")){
         throw std::runtime_error("Error deleting fixture folder \"requests.json\"");
     }
@@ -191,7 +191,7 @@ TEST_F(TestCaseConverterAnswers, TestPairsInput){
         std::pair <int, float>({10,0.769})
     },{}});
 
-    converter.putAnswers(input);
+    converter.put_answers(input);
     std::fstream answers_file(answers_path, std::ios_base::in);
     if (answers_file.is_open()){
         result = json::parse(answers_file);
@@ -216,7 +216,7 @@ TEST_F(TestCaseConverterAnswers, TestRelativeIndexInput){
         RelativeIndex({10,0.769})
         },{}});
 
-    converter.putAnswers(input);
+    converter.put_answers(input);
     std::fstream answers_file(answers_path, std::ios_base::in);
     if (answers_file.is_open()){
         result = json::parse(answers_file);

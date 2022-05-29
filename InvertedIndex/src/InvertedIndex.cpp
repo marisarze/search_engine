@@ -44,7 +44,7 @@ void InvertedIndex::handle_doc(std::string sentence, size_t id){
 };
 
 
-void InvertedIndex::UpdateDocumentBase(std::vector <std::string> input_docs){
+void InvertedIndex::update_document_base(std::vector <std::string> input_docs){
     std::vector <std::thread> threads;
     for (int i=0;i<input_docs.size(); i++){
         threads.push_back(std::thread(&InvertedIndex::handle_doc, this, input_docs[i], i));
@@ -56,7 +56,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector <std::string> input_docs){
 };
 
 
-std::vector <Entry> InvertedIndex::GetWordCount (const std::string& word){
+std::vector <Entry> InvertedIndex::get_word_count(const std::string& word){
     std::string for_lowercase = word;
     std::transform(for_lowercase.begin(), for_lowercase.end(), for_lowercase.begin(), ::tolower);
     if (freq_dictionary.count(for_lowercase)==0){
