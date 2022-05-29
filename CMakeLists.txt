@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(search_project)
+project(search_engine VERSION "0.0.9.1")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -25,9 +25,9 @@ add_subdirectory(Converter)
 add_subdirectory(InvertedIndex)
 add_subdirectory(SearchServer)
 add_subdirectory(test)
-add_executable(search_project main.cpp)
+add_executable(search_engine main.cpp)
 
-target_link_libraries(search_project Converter InvertedIndex SearchServer CLI11::CLI11)
+target_link_libraries(search_engine Converter InvertedIndex SearchServer CLI11::CLI11)
 
 
 

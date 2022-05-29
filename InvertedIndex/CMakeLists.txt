@@ -1,4 +1,3 @@
-#file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
 set(SOURCES include/InvertedIndex.h src/InvertedIndex.cpp)
 add_library(InvertedIndex ${SOURCES})
 target_include_directories (InvertedIndex PUBLIC include)

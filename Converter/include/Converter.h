@@ -39,7 +39,7 @@ public:
     void put_answers(std::vector<std::vector<RelativeIndex>> answers);
     void put_answers(std::vector<std::vector<std::pair<int, float>>> answers);
     void show_config_info();
-    void validate_config_file();
+    void validate_config_file(std::string valid_project_version);
 };
 
 

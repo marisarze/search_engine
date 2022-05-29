@@ -6,6 +6,9 @@
 #include <iostream>
 #include "CLI/CLI.hpp"
 
+#define PROJECT_NAME "@PROJECT_NAME@"
+#define PROJECT_VER  "@PROJECT_VERSION@"
+
 int main(int argc, char** argv) {
     try {
         CLI::App app{"App description"};
@@ -24,13 +27,13 @@ int main(int argc, char** argv) {
 
 
         ConverterJSON converter(config_path, request_path, output_path);
-        converter.ValidateConfigFile();
-        converter.ShowConfigInfo();
+        converter.validate_config_file(PROJECT_VER);
+        converter.show_config_info();
         InvertedIndex index;
-        index.UpdateDocumentBase(converter.GetTextDocuments());
+        index.update_document_base(converter.get_text_documents());
         SearchServer server(index);
-        auto answers = server.search(converter.GetRequests(), converter.GetResponsesLimit());
-        converter.putAnswers(answers);
+        auto answers = server.search(converter.get_requests(), converter.get_responses_limit());
+        converter.put_answers(answers);
         return 0;
     }
     catch (const std::exception& e){

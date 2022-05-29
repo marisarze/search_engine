@@ -1,6 +1,5 @@
-#file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+
 set(SOURCES include/SearchServer.h src/SearchServer.cpp)
 add_library(SearchServer ${SOURCES})
-#include_directories(../InvertedIndex)
 target_link_libraries(SearchServer InvertedIndex)
 target_include_directories (SearchServer PUBLIC include ${PROJECT_SOURCE_DIR}/InvertedIndex)

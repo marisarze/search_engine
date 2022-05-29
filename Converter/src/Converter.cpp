@@ -65,18 +65,24 @@ std::string ConverterJSON::read_open_file(std::ifstream &file){
 };
 
 
-void ConverterJSON::validate_config_file(){
+void ConverterJSON::validate_config_file(std::string valid_project_version){
     std::ifstream config_file(config_path);
     json parsedJSON;
     if (!config_file.is_open()){
-        std::string error_message = "Config file with path " + config_path + " is missing";
+        std::string error_message = "Config file with path " + config_path + " is missing.";
         throw std::runtime_error(error_message);
     } else {
         parsedJSON = json::parse(config_file);
         config_file.close();
     }
     if(parsedJSON.count("config")==0){
-        throw std::runtime_error("Config file is empty");
+        throw std::runtime_error("Config file is empty.");
+    }
+    if(parsedJSON["config"].count("version")==0){
+        throw std::runtime_error("Config file should contain version.");
+    }
+    if(parsedJSON["config"]["version"]!=valid_project_version){
+        throw std::runtime_error("Config file has incorrect version.");
     }
 }
 
