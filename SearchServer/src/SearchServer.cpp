@@ -10,7 +10,7 @@
 SearchServer::SearchServer(InvertedIndex& idx): index(idx){};
 
 
-std::vector <std::string> SearchServer::GetUniqueWords(std::string input){
+std::vector <std::string> SearchServer::get_unique_words(std::string input){
     std::vector <std::string> unique;
     std::string word;
     std::stringstream ss(input);
@@ -31,10 +31,10 @@ std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector 
     std::vector <std::vector<RelativeIndex>> result;
     for (int i=0;i<queries_input.size();i++){
         std::vector <Entry> abs_relevance = {};
-        auto unique = GetUniqueWords(queries_input[i]);
+        auto unique = get_unique_words(queries_input[i]);
         for (auto &word: unique){
             std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-            auto word_count = index.GetWordCount(word);
+            auto word_count = index.get_word_count(word);
             for (int j=0;j<word_count.size();j++){
                 bool found = false;
                 for (int k=0;k<abs_relevance.size();k++){

@@ -22,8 +22,8 @@ struct Entry {
 class InvertedIndex {
 public:
     InvertedIndex() = default;
-    std::vector<Entry> GetWordCount(const std::string &word);
-    void UpdateDocumentBase(std::vector<std::string> input_docs);
+    std::vector<Entry> get_word_count(const std::string &word);
+    void update_document_base(std::vector<std::string> input_docs);
 private:
     std::vector<std::string> docs;
     std::map<std::string, std::vector<Entry>> freq_dictionary;

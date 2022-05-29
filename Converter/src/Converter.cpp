@@ -65,23 +65,29 @@ std::string ConverterJSON::read_open_file(std::ifstream &file){
 };
 
 
-void ConverterJSON::ValidateConfigFile(){
+void ConverterJSON::validate_config_file(std::string valid_project_version){
     std::ifstream config_file(config_path);
     json parsedJSON;
     if (!config_file.is_open()){
-        std::string error_message = "Config file with path " + config_path + " is missing";
+        std::string error_message = "Config file with path " + config_path + " is missing.";
         throw std::runtime_error(error_message);
     } else {
         parsedJSON = json::parse(config_file);
         config_file.close();
     }
     if(parsedJSON.count("config")==0){
-        throw std::runtime_error("Config file is empty");
+        throw std::runtime_error("Config file is empty.");
+    }
+    if(parsedJSON["config"].count("version")==0){
+        throw std::runtime_error("Config file should contain version.");
+    }
+    if(parsedJSON["config"]["version"]!=valid_project_version){
+        throw std::runtime_error("Config file has incorrect version.");
     }
 }
 
 
-void ConverterJSON::ShowConfigInfo(){
+void ConverterJSON::show_config_info(){
     std::ifstream config_file(config_path);
     json parsedJSON = json::parse(config_file);
     config_file.close();
@@ -97,7 +103,7 @@ void ConverterJSON::ShowConfigInfo(){
 };
 
 
-std::vector <std::string> ConverterJSON::GetTextDocuments(){
+std::vector <std::string> ConverterJSON::get_text_documents(){
     std::ifstream config_file(config_path);
     json parsedJSON = json::parse(config_file);
     config_file.close();
@@ -117,7 +123,7 @@ std::vector <std::string> ConverterJSON::GetTextDocuments(){
 }
 
 
-int ConverterJSON::GetResponsesLimit(){
+int ConverterJSON::get_responses_limit(){
     std::ifstream config_file(config_path);
     json parsedJSON = json::parse(config_file);
     config_file.close();
@@ -125,7 +131,7 @@ int ConverterJSON::GetResponsesLimit(){
 }
 
 
-std::vector <std::string> ConverterJSON::GetRequests(){
+std::vector <std::string> ConverterJSON::get_requests(){
     std::ifstream requests_file(requests_path);
     json parsedJSON = json::parse(requests_file);
     requests_file.close();
@@ -138,7 +144,7 @@ std::vector <std::string> ConverterJSON::GetRequests(){
 };
 
 
-void ConverterJSON::putAnswers(std::vector <std::vector<RelativeIndex>> answers){
+void ConverterJSON::put_answers(std::vector <std::vector<RelativeIndex>> answers){
     json answersJSON = {{"answers", {}}};
     for (int request_id=0;request_id<answers.size();request_id++) {
         std::string prefix;
@@ -190,6 +196,6 @@ std::vector <std::vector<RelativeIndex>> ConverterJSON::to_relative_index(std::v
 }
 
 
-void ConverterJSON::putAnswers(std::vector <std::vector<std::pair<int, float>>> answers){
-    putAnswers(to_relative_index(answers));
+void ConverterJSON::put_answers(std::vector <std::vector<std::pair<int, float>>> answers){
+    put_answers(to_relative_index(answers));
 };

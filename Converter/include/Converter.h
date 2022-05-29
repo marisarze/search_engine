@@ -33,13 +33,13 @@ public:
     void set_answers_path(std::string in_answers_path);
     std::string get_answers_path();
 
-    std::vector<std::string> GetTextDocuments();
-    int GetResponsesLimit();
-    std::vector<std::string> GetRequests();
-    void putAnswers(std::vector<std::vector<RelativeIndex>> answers);
-    void putAnswers(std::vector<std::vector<std::pair<int, float>>> answers);
-    void ShowConfigInfo();
-    void ValidateConfigFile();
+    std::vector<std::string> get_text_documents();
+    int get_responses_limit();
+    std::vector<std::string> get_requests();
+    void put_answers(std::vector<std::vector<RelativeIndex>> answers);
+    void put_answers(std::vector<std::vector<std::pair<int, float>>> answers);
+    void show_config_info();
+    void validate_config_file(std::string valid_project_version);
 };
 
 

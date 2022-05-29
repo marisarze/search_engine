@@ -1,8 +1,4 @@
 set(target_test ${CMAKE_PROJECT_NAME}_test)
-message("cmake project name: " ${CMAKE_PROJECT_NAME})
-message("current source dir: " ${PROJECT_SOURCE_DIR})
-message("current binary dir: " ${PROJECT_BINARY_DIR})
-
 set(TEST_PROJECT_NAME search_engine_test)
 
 project(${TEST_PROJECT_NAME})

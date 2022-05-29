@@ -23,7 +23,7 @@ const std::vector<std::vector<RelativeIndex>> expected = {
 };
 
 InvertedIndex idx;
-idx.UpdateDocumentBase(docs);
+idx.update_document_base(docs);
 
 SearchServer srv(idx);
 
@@ -62,7 +62,7 @@ protected:
     InvertedIndex idx;
     SearchServer srv = SearchServer(idx);
     void SetUp() override {
-        idx.UpdateDocumentBase(docs);
+        idx.update_document_base(docs);
     }
 };
 

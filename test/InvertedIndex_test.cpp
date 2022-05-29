@@ -13,9 +13,9 @@ void TestInvertedIndexFunctionality(
 ) {
     std::vector<std::vector<Entry>> result;
     InvertedIndex idx;
-    idx.UpdateDocumentBase(docs);
+    idx.update_document_base(docs);
     for(auto& request : requests) {
-        std::vector<Entry> word_count = idx.GetWordCount(request);
+        std::vector<Entry> word_count = idx.get_word_count(request);
         result.push_back(word_count);
     }
 
