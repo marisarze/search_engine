@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.21)
-project(search_engine VERSION "0.0.9.2")
+project(search_engine VERSION "0.0.9.3")
 
 set(CMAKE_CXX_STANDARD 17)
 
-configure_file(cmake_var_parsing.h.in cmake_var_parsing.h @ONLY)
+configure_file(cmake_var_parsing.h.in cmake_var_parsing.h)
 
 include(FetchContent)
 FetchContent_Declare(

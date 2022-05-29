@@ -33,12 +33,14 @@ int main(int argc, char** argv) {
             SearchServer server(index);
             auto answers = server.search(converter.get_requests(), converter.get_responses_limit());
             converter.put_answers(answers);
+            std::cout << "The answer is recorded to folder: " << output_path << std::endl;
         }
         std::cout << "The application completed successfully." << std::endl;
         return 0;
     }
     catch (const std::exception& e){
         std::cerr << "Error: " << e.what();
+        std::cout << "The application exited with an error." << std::endl;
         return 1;
     }
 
