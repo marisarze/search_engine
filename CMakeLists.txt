@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(search_engine VERSION "0.0.9.1")
+project(search_engine VERSION "0.0.9.2")
 
 set(CMAKE_CXX_STANDARD 17)
 
