@@ -5,9 +5,7 @@
 
 #include <iostream>
 #include "CLI/CLI.hpp"
-
-#define PROJECT_NAME "@PROJECT_NAME@"
-#define PROJECT_VER  "@PROJECT_VERSION@"
+#include "cmake_var_parsing_in.h"
 
 int main(int argc, char** argv) {
     try {
