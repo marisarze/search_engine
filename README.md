@@ -28,7 +28,7 @@ The content of the configuration file should looks like \
 { \
 &emsp;"config": { \
 &emsp;&emsp;"name": "Search Engine", \
-&emsp;&emsp;"version": "0.0.9.1", \
+&emsp;&emsp;"version": "0.0.9.3", \
 &emsp;&emsp;"max_responses": 5 \
 &emsp;}, \
 &emsp;"files": [ \
@@ -43,7 +43,7 @@ where fields describe \
 ● **config** - general information, without which the application does not start. \
 ● **name** - field with the name of the search engine. It can be anything. You can come up with a name for the search engine yourself. \
 ● **max_responses** - a field that determines the maximum number of responses to one request.\
-● **version** - field with the version number of the search engine. **Must match the version of the application (current 0.0.9.2) otherwise an error will be raised.** \
+● **version** - field with the version number of the search engine. **Must match the version of the application (current 0.0.9.3) otherwise an error will be raised.** \
 ● **files** - contains the paths to the files to be searched.. Each resource text file contains no more than 1000 words with a maximum length of 100 characters each. Words consist of lowercase English letters and are separated by one or more spaces.
 
 ### -r, --request
