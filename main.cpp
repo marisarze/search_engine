@@ -21,23 +21,25 @@ int main(int argc, char** argv) {
 
         std::string output_path = "./answers.json";
         app.add_option("--output,-o", output_path, "Output path for query response file");
-
-
+        bool version_flag=false;
+        app.add_flag("--version,-v", version_flag, "Show a version of the application");
         CLI11_PARSE(app, argc, argv);
-
-
-        ConverterJSON converter(config_path, request_path, output_path);
-        converter.validate_config_file(PROJECT_VER);
-        converter.show_config_info();
-        InvertedIndex index;
-        index.update_document_base(converter.get_text_documents());
-        SearchServer server(index);
-        auto answers = server.search(converter.get_requests(), converter.get_responses_limit());
-        converter.put_answers(answers);
-        return 0;
+        if (version_flag){
+            std::cout << "The app version: " << PROJECT_VER << std::endl;
+        } else {
+            ConverterJSON converter(config_path, request_path, output_path);
+            converter.validate_config_file(PROJECT_VER);
+            converter.show_config_info();
+            InvertedIndex index;
+            index.update_document_base(converter.get_text_documents());
+            SearchServer server(index);
+            auto answers = server.search(converter.get_requests(), converter.get_responses_limit());
+            converter.put_answers(answers);
+            return 0;
+        }
     }
     catch (const std::exception& e){
-        std::cerr << e.what();
+        std::cerr << "Error: " << e.what();
         return 1;
     }
 

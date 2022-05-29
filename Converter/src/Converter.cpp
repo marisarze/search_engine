@@ -96,9 +96,7 @@ void ConverterJSON::show_config_info(){
     if (config_part.count("name")){
         info = info + "search engine name: " + config_part["name"].get<std::string>() + '\n';
     }
-    if (config_part.count("version")){
-        info = info + "search engine version: " + config_part["version"].get<std::string>() + '\n';
-    }
+    info = info + "search engine version: " + config_part["version"].get<std::string>() + '\n';
     std::cout << info;
 };
 
