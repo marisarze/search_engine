@@ -44,6 +44,22 @@ void InvertedIndex::handle_doc(std::string sentence, size_t id){
 };
 
 
+void InvertedIndex::sort_freq_dictionary(){
+    for (auto &elem: freq_dictionary){
+        auto& value = elem.second;
+        for (int i = 0; i < value.size(); i++) {
+            for (int j = 0; j < value.size() - i - 1; j++) {
+                if (value[j].doc_id >= value[j + 1].doc_id) {
+                    auto temp = value[j];
+                    value[j] = value[j + 1];
+                    value[j + 1] = temp;
+                }
+            }
+        }
+    }
+}
+
+
 void InvertedIndex::update_document_base(std::vector <std::string> input_docs){
     std::vector <std::thread> threads;
     for (int i=0;i<input_docs.size(); i++){
@@ -52,6 +68,7 @@ void InvertedIndex::update_document_base(std::vector <std::string> input_docs){
     for (int i=0;i<threads.size(); i++){
         threads[i].join();
     }
+    sort_freq_dictionary();
     docs = input_docs;
 };
 

@@ -30,9 +30,9 @@ const std::vector<std::string> docs = {
 const std::vector<std::string> requests = {"london", "the"};
 const std::vector<std::vector<Entry>> expected = {
         {
-                {0, 1}
+                Entry{0, 1}
         }, {
-                {0, 1}, {1, 3}
+                Entry{0, 1}, Entry{1, 3}
         }
 };
 TestInvertedIndexFunctionality(docs, requests, expected);
@@ -48,11 +48,11 @@ const std::vector<std::string> docs = {
 const std::vector<std::string> requests = {"milk", "water", "cappuccino"};
 const std::vector<std::vector<Entry>> expected = {
         {
-                {0, 4}, {1, 1}, {2, 5}
+                Entry{0, 4}, Entry{1, 1}, Entry{2, 5}
         }, {
-                {0, 3}, {1, 2}, {2, 5}
+                Entry{0, 3}, Entry{1, 2}, Entry{2, 5}
         }, {
-                {3, 1}
+                Entry{3, 1}
         }
 };
 TestInvertedIndexFunctionality(docs, requests, expected);

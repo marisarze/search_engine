@@ -83,7 +83,7 @@ void ConverterJSON::validate_config_file(std::string valid_project_version){
     }
     if(parsedJSON["config"]["version"]!=valid_project_version){
         std::cerr << "Version of the application is " << valid_project_version << ", but got from config "
-        << parsedJSON["config"]["version"]<< std::endl;
+        << (std::string)parsedJSON["config"]["version"]<< std::endl;
         throw std::runtime_error("Config file has incorrect version.");
     }
 }

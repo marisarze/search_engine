@@ -6,13 +6,14 @@ Hello! Here is a simple search engine project. The source code of the project is
 
 ## Installing
 
-To create a working executable, you must have [CMake](https://cmake.org/) installed on your computer along with the compiler. Download the repository: Click on the green Code button on this page and Download Zip or in the command window enter the command
-
-git clone https://github.com/marisarze/search_engine.git\
-cd search_engine\
-cmake -B build\
-cd build\
-cmake --build .
+To create a working executable, you must have [CMake](https://cmake.org/) installed on your computer along with the compiler. Download the repository: Click on the green Code button on this page and Download Zip or in the command window enter the command </br>
+<code>
+git clone https://github.com/marisarze/search_engine.git </br>
+cd search_engine </br>
+cmake -B build\ </br>
+cd build\ </br>
+cmake --build . </br>
+</code>
 
 In the build directory where we are located, the executable file "search_engine"  is created.
 
@@ -20,24 +21,26 @@ In the build directory where we are located, the executable file "search_engine"
 
 The application is launched using the command \
 search_engine [-c,--config /path/to/config.json] [-r,--request /path/to/requests.json] [-o,--output /path/to/answers.json]
+<hr>
 
 ### -c, --config
 Option sets the path to the configuration file config.json.\
 Default value is ./config.json. \
 The content of the configuration file should looks like \
-{ \
-&emsp;"config": { \
-&emsp;&emsp;"name": "Search Engine", \
-&emsp;&emsp;"version": "0.0.9.3", \
-&emsp;&emsp;"max_responses": 5 \
-&emsp;}, \
-&emsp;"files": [ \
-&emsp;&emsp;"../resources/file001.txt", \
-&emsp;&emsp;"../resources/file002.txt", \
-&emsp;&emsp;"../resources/file003.txt", \
-&emsp;&emsp;… \
-&emsp;] \
-} \
+
+&emsp;"config": {</br>
+&emsp;&emsp;"name": "Search Engine",</br>
+&emsp;&emsp;"version": "0.0.9.3", </br>
+&emsp;&emsp;"max_responses": 5 </br>
+&emsp;}, </br>
+&emsp;"files": [ </br>
+&emsp;&emsp;"../resources/file001.txt", </br>
+&emsp;&emsp;"../resources/file002.txt", </br>
+&emsp;&emsp;"../resources/file003.txt", </br>
+&emsp;&emsp;… </br>
+&emsp;] </br>
+}
+
 
 where fields describe \
 ● **config** - general information, without which the application does not start. \
@@ -45,6 +48,7 @@ where fields describe \
 ● **max_responses** - a field that determines the maximum number of responses to one request.\
 ● **version** - field with the version number of the search engine. **Must match the version of the application (current 0.0.9.3) otherwise an error will be raised.** \
 ● **files** - contains the paths to the files to be searched.. Each resource text file contains no more than 1000 words with a maximum length of 100 characters each. Words consist of lowercase English letters and are separated by one or more spaces.
+<hr>
 
 ### -r, --request
 Option sets path to the request file requests.json. \
@@ -62,6 +66,7 @@ An example of a requests.json file description:\
 
 ● **requests** - consists of a list of requests that need to be processed by the search engine. The field contains no more than 1000 queries, each of which includes from one to ten words. \
 ● **some words..** — search query, a set of words separated by one or more spaces. They need to be searched. All words are composed of lowercase Latin letters.
+<hr>
 
 ### -o, --output
 Option sets the path to the output file answers.json.\
