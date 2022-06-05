@@ -61,7 +61,6 @@ std::vector <std::vector<RelativeIndex>> SearchServer::search(const std::vector 
                         abs_relevance[k + 1] = temp;
                     }
                 }
-
             }
         }
         std::vector <RelativeIndex> relative_query_relevance = {};

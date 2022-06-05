@@ -14,9 +14,9 @@ const std::vector<std::string> docs = {
 const std::vector<std::string> request = {"milk water", "sugar"};
 const std::vector<std::vector<RelativeIndex>> expected = {
         {
-                {2, 1},
-                {0, 0.7},
-                {1, 0.3}
+                RelativeIndex{2, 1.0},
+                RelativeIndex{0, 0.7},
+                RelativeIndex{1, 0.3}
         },
         {
         }
@@ -24,11 +24,8 @@ const std::vector<std::vector<RelativeIndex>> expected = {
 
 InvertedIndex idx;
 idx.update_document_base(docs);
-
 SearchServer srv(idx);
-
 std::vector<std::vector<RelativeIndex>> result = srv.search(request);
-
 ASSERT_EQ(result, expected);
 }
 
@@ -71,16 +68,15 @@ TEST_F(TestCaseSearchServer, TestTop5) {
     const std::vector<std::string> request = {"moscow is the capital of russia"};
     const std::vector<std::vector<RelativeIndex>> expected = {
             {
-                    {7, 1},
-                    {14, 1},
-                    {0, (float)4/(float)6},
-                    {1, (float)4/(float)6},
-                    {2, (float)4/(float)6}
+                    RelativeIndex{7, 1.0},
+                    RelativeIndex{14, 1.0},
+                    RelativeIndex{0, (float)4/(float)6},
+                    RelativeIndex{1, (float)4/(float)6},
+                    RelativeIndex{2, (float)4/(float)6}
             }
     };
 
     std::vector<std::vector<RelativeIndex>> result = srv.search(request, 5);
-
     ASSERT_EQ(result, expected);
 }
 

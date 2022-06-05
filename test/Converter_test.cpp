@@ -71,6 +71,26 @@ TEST_F(TestCaseConverter, TestShowConfigInfo){
     ASSERT_EQ(result, expected);
 };
 
+TEST_F(TestCaseConverter, TestVersionError){
+    std::string requests_path = "./requests.json";
+    std::string answers_path = "./answers.json";
+    auto converter = ConverterJSON(config_path, requests_path, answers_path);
+    std::stringstream buffer;
+    std::streambuf *sbuf = std::cerr.rdbuf();
+    std::cerr.rdbuf(buffer.rdbuf());
+    std::string expected_cerr = "Version of the application is 1.000, but got from config 0.9999\n";
+    std::string expected_cout = "Config file has incorrect version.";
+    try {
+        converter.validate_config_file("1.000");
+    } catch(std::exception &ex){
+        std::string result_cerr = buffer.str();
+        std::cerr.rdbuf(sbuf);
+        std::string result_cout = ex.what();
+        ASSERT_EQ(result_cout, expected_cout);
+        ASSERT_EQ(result_cerr, expected_cerr);
+    }
+};
+
 
 TEST_F(TestCaseConverter, TestGetResponsesLimit){
     std::string requests_path = "./requests.json";
