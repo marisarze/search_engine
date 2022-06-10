@@ -15,31 +15,26 @@ std::mutex mtx;
 void InvertedIndex::handle_doc(std::string sentence, size_t id){
     std::stringstream ss(sentence);
     std::string word;
+    Entry newEntry = {id, 1};
     while (ss >> word){
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+        mtx.lock();
         if (freq_dictionary.count(word)==0){
-            Entry newEntry = {id, 1};
-            mtx.lock();
             freq_dictionary[word].push_back(newEntry);
-            mtx.unlock();
         } else {
             bool entry_found = false;
             for (auto &entry: freq_dictionary[word]){
                 if (entry.doc_id == id){
-                    mtx.lock();
                     entry.count++;
-                    mtx.unlock();
                     entry_found = true;
                     break;
                 }
             }
             if (!entry_found){
-                Entry newEntry = {id, 1};
-                mtx.lock();
                 freq_dictionary[word].push_back(newEntry);
-                mtx.unlock();
             }
         }
+        mtx.unlock();
     }
 };
 
